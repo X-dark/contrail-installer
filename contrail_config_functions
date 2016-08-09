@@ -435,7 +435,7 @@ function replace_contrail_dns_conf()
 function check_dev()
 {
    interface=$1
-   arr=$(ifconfig | awk '{print $1}')
+   arr=$(sudo ifconfig | awk '{print $1}')
    if [[ " ${arr[*]} " == *"$interface"* ]]; then
        echo "interface found"
        
@@ -502,7 +502,7 @@ function get_if_mtu()
 {
     mtu=''
     interface=$1 
-    mtu=$(ifconfig $interface|grep MTU | awk 'BEGIN{FS=OFS="MTU"}{print $2}'|awk 'BEGIN{FS=OFS=":"}{print $2}'|awk '{print $1}')
+    mtu=$(sudo ifconfig $interface|grep MTU | awk 'BEGIN{FS=OFS="MTU"}{print $2}'|awk 'BEGIN{FS=OFS=":"}{print $2}'|awk '{print $1}')
     if [[ $mtu -eq 1500 ]]; then
         mtu=''
     fi
@@ -521,10 +521,10 @@ function get_Mask()
 {
     interface=$1
     if is_ubuntu; then
-        mask=$(ifconfig $interface|grep Mask | awk 'BEGIN{FS=OFS="Mask"}{print $2}'|awk 'BEGIN{FS=OFS=":"}{print $2}')
+        mask=$(sudo ifconfig $interface|grep Mask | awk 'BEGIN{FS=OFS="Mask"}{print $2}'|awk 'BEGIN{FS=OFS=":"}{print $2}')
         echo $mask
     else
-        mask=$(ifconfig $interface|sed -ne 's/.*[[net]*]*mask[: ]*\([0-9.]*\).*/\1/i p') 
+        mask=$(sudo ifconfig $interface|sed -ne 's/.*[[net]*]*mask[: ]*\([0-9.]*\).*/\1/i p') 
         echo $mask
     fi
 }
@@ -533,10 +533,10 @@ function get_management_ip()
 {
     interface=$1
     if is_ubuntu; then    
-        management_ip=$(ifconfig $interface|grep -e addr| awk 'BEGIN{FS=OFS="net addr"}{print $2}'|awk '{print $1}'|awk 'BEGIN{FS=OFS=":"}{print $2}')
+        management_ip=$(sudo ifconfig $interface|grep -e addr| awk 'BEGIN{FS=OFS="net addr"}{print $2}'|awk '{print $1}'|awk 'BEGIN{FS=OFS=":"}{print $2}')
         echo $management_ip
     else
-        management_ip=$(ifconfig $interface|sed -ne 's/.*inet [[addr]*]*[: ]*\([0-9.]*\).*/\1/i p')
+        management_ip=$(sudo ifconfig $interface|sed -ne 's/.*inet [[addr]*]*[: ]*\([0-9.]*\).*/\1/i p')
         echo $management_ip
     fi
 }
@@ -665,9 +665,9 @@ function get_Mac()
 {
     interface=$1
     if  is_ubuntu; then
-        mac=$(ifconfig $interface|grep HWaddr | awk '{print $5}')
+        mac=$(sudo ifconfig $interface|grep HWaddr | awk '{print $5}')
     elif is_fedora; then
-        mac=$(ifconfig $interface|grep ether | awk '{print $2}')
+        mac=$(sudo ifconfig $interface|grep ether | awk '{print $2}')
     fi   
     echo $mac
 
